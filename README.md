@@ -7,8 +7,29 @@ Explaination of the implementation of Wi-Fi provisioning using BLE (Bluetooth Lo
 
 Wi-Fi provisioning via BLE allows users to configure their ESP32 devices with Wi-Fi credentials through a BLE-enabled app. ESP-IDF simplifies this process with a provisioning manager module. **Important:** The provisioning service name must begin with the prefix `PROV_` for compatibility with mobile apps.
 
----
+Wi-Fi provisioning allows devices to connect to a Wi-Fi network without needing hardcoded credentials. This project implements **Wi-Fi provisioning** using **Bluetooth Low Energy (BLE)**, making it easy for devices to be configured remotely via a mobile app or other BLE-enabled devices. This is particularly useful for IoT devices that do not have a display or user interface for direct input of network credentials.
 
+In this setup, the **ESP32** is used to handle the provisioning process. The provisioning process is initiated via BLE, and the device listens for Wi-Fi credentials (SSID and password) sent from a mobile app. Once the credentials are received, the device connects to the Wi-Fi network and can be used for further IoT applications.
+
+### Key Features:
+- **BLE-based Provisioning**: Allows Wi-Fi credentials to be sent securely over BLE.
+- **QR Code Generation**: The app scans the QR code to initiate provisioning.
+- **Event Handling**: Monitors events such as successful credential reception, Wi-Fi connection, and disconnection.
+
+### Workflow:
+1. **Provisioning Initiation**: BLE provisioning is initiated when the device starts, and a QR code is displayed for scanning.
+2. **Credential Transmission**: A mobile app sends the Wi-Fi credentials (SSID and password) via BLE to the device.
+3. **Wi-Fi Connection**: The device connects to the Wi-Fi network using the received credentials.
+4. **Event Notifications**: The system provides real-time updates for successful or failed provisioning attempts.
+
+### Benefits:
+- **Easy Setup**: Eliminates the need for manually entering Wi-Fi credentials.
+- **Secure**: Ensures that Wi-Fi credentials are sent securely via BLE.
+- **User-friendly**: Enables mobile app-based configuration for users.
+
+This document details the process of Wi-Fi provisioning using BLE, providing the necessary tools and instructions to set up and use the provisioning system in Arduino IDE with ESP32.
+
+---
 ## Prerequisites
 
 Ensure the following are set up before starting:  
@@ -19,39 +40,6 @@ Ensure the following are set up before starting:
   (https://docs.arduino.cc/software/ide-v1/tutorials/Windows/).  
 - **Hardware:** ESP32 development board.  
 - **Mobile App:** Espressif's official provisioning app (available on Android/iOS).  
-
----
-## OUTPUT
-
-1.
-
-<img src="https://github.com/user-attachments/assets/4441b79c-a368-48d3-828f-ef23397e8a7b" alt="Screenshot 2025-01-19 154841" width="50%">
-
-2.
-<img src="https://github.com/user-attachments/assets/789dc0e4-dd8e-475b-b47d-7dcaead3ec27" alt="IMG-20250119-WA0041" width="500">
-
-3.
-<img src="https://github.com/user-attachments/assets/53c0d96d-1178-4c54-8a3c-776207a497a9" alt="IMG-20250119-WA0040" width="500">
-
-4.
-<img src="https://github.com/user-attachments/assets/576cbf29-2597-435a-a2a2-741a4e4bb49b" alt="IMG-20250119-WA0039" width="500">
-
-5.
-<img src="https://github.com/user-attachments/assets/bec78b93-971f-428e-ad16-76eddb86ff8b" alt="IMG-20250119-WA0038" width="500">
-
-6.
-<img src="https://github.com/user-attachments/assets/940cc88b-eda8-49cd-b3b2-71695bd3bdda" alt="IMG-20250119-WA0036" width="500">
-
-7.
-<img src="https://github.com/user-attachments/assets/ff7d7eaf-d17c-43d3-9618-7c037aab83b4" alt="IMG-20250119-WA0037" width="500">
-
-8.
-<img src="https://github.com/user-attachments/assets/27e0b2fb-0999-4543-ad30-936627883f39" alt="Screenshot 2025-01-19 154857" width="500">
-
-## FINAL RESULT VIDEO(click on the img)
-[![Results VIDEO](https://img.youtube.com/vi/QT-zrRaPSUc/0.jpg)](https://youtu.be/QT-zrRaPSUc?si=0Wb2nN6YIh4JXf1G)
-
-
 
 ---
 
