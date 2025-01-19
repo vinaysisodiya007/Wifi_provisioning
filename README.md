@@ -16,7 +16,6 @@ Ensure the following are set up before starting:
 - **ESP-IDF** installed and configured ([Setup Guide](https://docs.espressif.com/)).  
 - **Hardware:** ESP32 development board.  
 - **Mobile App:** Espressif's official provisioning app (available on Android/iOS).  
-- Familiarity with **C programming** and the ESP-IDF framework.
 
 ---
 
