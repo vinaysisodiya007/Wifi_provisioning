@@ -1,4 +1,4 @@
-# Wi-Fi Provisioning using BLE in ESP-IDF
+# Wi-Fi Provisioning using BLE 
 
 Explaination of the implementation of Wi-Fi provisioning using BLE (Bluetooth Low Energy) in ESP-IDF. Wi-Fi provisioning enables devices to receive Wi-Fi credentials via a BLE-enabled mobile app.
 
