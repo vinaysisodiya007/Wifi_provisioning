@@ -1,4 +1,4 @@
-## Implementation Steps
+## IMPLEMENT STEPS
 
 ### 1. Initialize NVS  
 Initialize non-volatile storage (NVS) to store Wi-Fi credentials.
@@ -59,104 +59,31 @@ ESP_ERROR_CHECK(esp_wifi_start());
 ```
 
 ---
+## To select the board, port, and open the serial monitor in ESP-IDF development workflow, follow these steps:
 
-## Code Explanation
+Do it directly from the idf...
 
-Below is the complete implementation of BLE-based Wi-Fi provisioning in `main.c`:  
+From the Top Left Section You Can directly Build , Run, Select Port,Board in ESP IDF. 
 
-```c
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <freertos/event_groups.h>
-#include <esp_wifi.h>
-#include <esp_event.h>
-#include <nvs_flash.h>
-#include <wifi_provisioning/manager.h>
-#include <wifi_provisioning/scheme_ble.h>
+![Screenshot 2025-01-19 141709](https://github.com/user-attachments/assets/70df4785-f5e5-408c-a1f2-76097ee51cde)
 
-static const char *TAG = "app";
-static EventGroupHandle_t wifi_event_group;
-const int WIFI_CONNECTED_EVENT = BIT0;
+### To Build Click On Hammer Icon...
 
-static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
-    if (event_base == WIFI_PROV_EVENT) {
-        switch (event_id) {
-        case WIFI_PROV_START:
-            ESP_LOGI(TAG, "Provisioning started");
-            break;
-        case WIFI_PROV_CRED_RECV:
-            wifi_sta_config_t *wifi_sta_cfg = (wifi_sta_config_t *)event_data;
-            ESP_LOGI(TAG, "Received Wi-Fi credentials\n\tSSID: %s\n\tPassword: %s",
-                     (const char *)wifi_sta_cfg->ssid, (const char *)wifi_sta_cfg->password);
-            break;
-        case WIFI_PROV_CRED_FAIL:
-            ESP_LOGE(TAG, "Provisioning failed! Reset and retry.");
-            break;
-        case WIFI_PROV_CRED_SUCCESS:
-            ESP_LOGI(TAG, "Provisioning successful");
-            break;
-        case WIFI_PROV_END:
-            wifi_prov_mgr_deinit();
-            break;
-        }
-    } else if (event_base == WIFI_EVENT) {
-        switch (event_id) {
-        case WIFI_EVENT_STA_START:
-            esp_wifi_connect();
-            break;
-        case WIFI_EVENT_STA_DISCONNECTED:
-            ESP_LOGI(TAG, "Disconnected. Reconnecting...");
-            esp_wifi_connect();
-            break;
-        }
-    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-        ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
-        ESP_LOGI(TAG, "Connected with IP: " IPSTR, IP2STR(&event->ip_info.ip));
-        xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_EVENT);
-    }
-}
+![Screenshot 2025-01-19 151135](https://github.com/user-attachments/assets/cd1c9e57-c9a2-475e-bcc9-5d2e73dbad71)
 
-void app_main(void) {
-    // Initialize NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ESP_ERROR_CHECK(nvs_flash_init());
-    }
+### To Run Or Flash the Code to Board Click On Playback Icon...
+![Screenshot 2025-01-19 151157](https://github.com/user-attachments/assets/328859e2-a45f-45ff-98c8-0d51c2b39f69)
 
-    // Initialize Wi-Fi and BLE provisioning
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-    wifi_event_group = xEventGroupCreate();
+### Ensure You Select Correct Board and Ports..
+![Screenshot 2025-01-19 151240](https://github.com/user-attachments/assets/db15d6e1-2736-464f-8bf8-483d725a4ab7)
 
-    esp_netif_create_default_wifi_sta();
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+### Selecting board..
+![Screenshot 2025-01-19 151224](https://github.com/user-attachments/assets/0c6a6562-ce1e-4097-8e81-fb94ec1764e7)
 
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_PROV_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
+### Selecting Port...
+![Screenshot 2025-01-19 151317](https://github.com/user-attachments/assets/033cf825-772a-4676-a42f-d1e12995712e)
 
-    wifi_prov_mgr_config_t config = {
-        .scheme = wifi_prov_scheme_ble,
-        .scheme_event_handler = WIFI_PROV_EVENT_HANDLER_NONE
-    };
-
-    ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
-
-    char service_name[32] = "PROV_123456";
-    ESP_LOGI(TAG, "Service name: %s", service_name);
-
-    ESP_LOGI(TAG, "Starting provisioning");
-    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(WIFI_PROV_SECURITY_1, "abcd1234", NULL, service_name));
-
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_start());
-}
-```
-
----
-To select the board, port, and open the serial monitor in ESP-IDF development workflow, follow these steps:
+Or do it via terminal...
 
 ### 1. **Selecting the Board**
    - Ensure your ESP32 is connected to your computer via a USB cable.
@@ -175,7 +102,7 @@ To select the board, port, and open the serial monitor in ESP-IDF development wo
      ```bash
      idf.py -p /dev/ttyUSB0 flash
      ```
-
+     
 ### 3. **Opening the Serial Monitor**
    - After flashing, you can open the serial monitor to view logs:
      ```bash
